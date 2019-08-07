@@ -3,6 +3,8 @@
 #include "framework.h"
 #include "Chess.h"
 
+#include <windowsx.h>
+
 #include "Game.h"
 
 #define MAX_LOADSTRING 100
@@ -19,7 +21,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-BOOL				InitializeGrid(HWND hwndListView);
+void				pieceToText(Chess::PieceType piece, TCHAR* textBuffer);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -148,10 +150,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
+            
+			for (int column = 0; column < 8; column++)
+			{
+				for (int row = 0; row < 8; row++)
+				{
+					//Draw border around cell
+					RECT rect;
+					rect.left = column * 50;
+					rect.top = row * 50;
+					rect.right = (column + 1) * 50;
+					rect.bottom = (row + 1) * 50;
+					DrawEdge(hdc, &rect, EDGE_RAISED, BF_RECT);
+
+					//Print piece description in cell
+					TCHAR textBuffer[3];
+					pieceToText(game.getBoardState()[7 - row][column], textBuffer);
+					TextOut(hdc, column * 50 + 15, row * 50 + 15, textBuffer, 2);
+				}
+			}
+
             EndPaint(hWnd, &ps);
         }
         break;
+	case WM_LBUTTONUP:
+		{
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+
+			char debug[100];
+			sprintf_s(debug, 100, "Clicked cell with row %d and column %d\n", yPos / 50, xPos / 50);
+			OutputDebugStringA(debug);
+		}
+		break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
@@ -179,4 +210,46 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+//Converts PieceType to text representation
+void pieceToText(Chess::PieceType piece, TCHAR* textBuffer)
+{
+	switch (piece.color)
+	{
+	case Chess::Color::White:
+		textBuffer[0] = 'W';
+		break;
+	case Chess::Color::Black:
+		textBuffer[0] = 'B';
+		break;
+	}
+
+	switch (piece.type)
+	{
+	case Chess::PieceType::King:
+		textBuffer[1] = 'K';
+		break;
+	case Chess::PieceType::Queen:
+		textBuffer[1] = 'Q';
+		break;
+	case Chess::PieceType::Rook:
+		textBuffer[1] = 'R';
+		break;
+	case Chess::PieceType::Knight:
+		textBuffer[1] = 'N';
+		break;
+	case Chess::PieceType::Bishop:
+		textBuffer[1] = 'B';
+		break;
+	case Chess::PieceType::Pawn:
+		textBuffer[1] = 'P';
+		break;
+	case Chess::PieceType::None:
+		textBuffer[0] = ' ';
+		textBuffer[1] = ' ';
+		break;
+	}
+
+	textBuffer[2] = 0;
 }
