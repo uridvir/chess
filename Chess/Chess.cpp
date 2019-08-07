@@ -5,12 +5,7 @@
 
 #include "Game.h"
 
-#include <commctrl.h>
-#pragma comment( lib, "comctl32.lib" )
-
 #define MAX_LOADSTRING 100
-
-#define GRID_ID 42
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -44,16 +39,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
-	INITCOMMONCONTROLSEX icxx;
-	icxx.dwICC = ICC_LISTVIEW_CLASSES;
-	InitCommonControlsEx(&icxx);
-	HWND hwndGrid = CreateWindow(WC_LISTVIEW, _T(""), WS_CHILD | WS_VISIBLE | WS_BORDER | LVS_REPORT | LVS_NOCOLUMNHEADER | LVS_SINGLESEL | LVS_ALIGNTOP,
-		10, 10, 400, 135, mainWindow, (HMENU) GRID_ID, hInst, 0);
-
-	ListView_SetExtendedListViewStyle(hwndGrid, LVS_EX_GRIDLINES);
-
-	InitializeGrid(hwndGrid);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CHESS));
 
@@ -194,110 +179,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
-}
-
-//Converts PieceType to text representation
-void pieceToText(Chess::PieceType piece, TCHAR* textBuffer)
-{
-	switch (piece.color)
-	{
-	case Chess::Color::White:
-		textBuffer[0] = 'W';
-		break;
-	case Chess::Color::Black:
-		textBuffer[0] = 'B';
-		break;
-	}
-
-	switch (piece.type)
-	{
-	case Chess::PieceType::King:
-		textBuffer[1] = 'K';
-		break;
-	case Chess::PieceType::Queen:
-		textBuffer[1] = 'Q';
-		break;
-	case Chess::PieceType::Rook:
-		textBuffer[1] = 'R';
-		break;
-	case Chess::PieceType::Knight:
-		textBuffer[1] = 'N';
-		break;
-	case Chess::PieceType::Bishop:
-		textBuffer[1] = 'B';
-		break;
-	case Chess::PieceType::Pawn:
-		textBuffer[1] = 'P';
-		break;
-	case Chess::PieceType::None:
-		textBuffer[0] = ' ';
-		textBuffer[1] = ' ';
-		break;
-	}
-
-	textBuffer[2] = 0;
-}
-
-//Initializes the grid with 8 columns and 8 rows
-BOOL InitializeGrid(HWND hwndListView)
-{
-	LVCOLUMN lvc;
-	lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_SUBITEM;
-
-	for (int iCol = 0; iCol < 8; iCol++) 
-	{
-		lvc.fmt = LVCFMT_LEFT;
-		lvc.iSubItem = iCol;
-		lvc.cx = 50;
-
-		if (ListView_InsertColumn(hwndListView, iCol, &lvc) == -1)
-		{
-			return FALSE;
-		}
-
-	}
-
-	game = Chess::Game();
-	auto state = game.getBoardState();
-
-	LVITEM item;
-	item.mask = LVIF_TEXT;
-	item.cchTextMax = 2;
-	TCHAR textBuffer[3];
-
-	int column;
-	int row;
-
-	auto fail = [column, row]() -> BOOL {
-		char debug[100];
-		sprintf_s(debug, 100, "Could not insert item at column %d, row %d\n", column, row);
-		OutputDebugStringA(debug);
-		return FALSE;
-	};
-
-	for (row = 0; row < 8; row++)
-	{
-		for (column = 0; column < 8; column++)
-		{
-			item.iItem = row;
-			item.iSubItem = column;
-
-			pieceToText(state[7 - row][column], textBuffer);
-			item.pszText = textBuffer;
-
-			if (column == 0)
-			{
-				if (ListView_InsertItem(hwndListView, &item) == -1)
-				{
-					return fail();
-				}
-			}
-			else if (ListView_SetItem(hwndListView, &item) == -1)
-			{
-				return fail();
-			}
-		}
-	}
-
-	return TRUE;
 }
