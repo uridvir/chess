@@ -1,22 +1,22 @@
 #pragma once
 #include <vector>
+#include "Board.h"
 
 namespace Chess 
 {
-
-	enum Color { White, Black };
-
-	struct PieceType
-	{
-		enum Species { King, Queen, Rook, Knight, Bishop, Pawn, None };
-		Species type;
-		Color color;
-	};
+	
+	enum Color;
 	
 	class Game
 	{
+
+	private:
+		Board board;
+
 	public:
+		Game();
 		std::vector<std::vector<PieceType>> getBoardState();
+	
 	};
 
 }

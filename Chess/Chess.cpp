@@ -150,6 +150,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
+
+			auto state = game.getBoardState();
             
 			for (int column = 0; column < 8; column++)
 			{
@@ -165,7 +167,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					//Print piece description in cell
 					TCHAR textBuffer[3];
-					pieceToText(game.getBoardState()[7 - row][column], textBuffer);
+					pieceToText(state[7 - row][column], textBuffer);
 					TextOut(hdc, column * 50 + 15, row * 50 + 15, textBuffer, 2);
 				}
 			}
@@ -225,7 +227,7 @@ void pieceToText(Chess::PieceType piece, TCHAR* textBuffer)
 		break;
 	}
 
-	switch (piece.type)
+	switch (piece.species)
 	{
 	case Chess::PieceType::King:
 		textBuffer[1] = 'K';

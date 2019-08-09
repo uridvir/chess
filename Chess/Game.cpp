@@ -1,35 +1,64 @@
 #include "Game.h"
+#include "Bishop.h"
+#include "King.h"
+#include "Knight.h"
+#include "Pawn.h"
+#include "Queen.h"
+#include "Rook.h"
 using namespace Chess;
 
-//TODO: Actually implement
+Chess::Game::Game()
+{
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Rook(Color::White, Position("a1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Knight(Color::White, Position("b1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Bishop(Color::White, Position("c1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Queen(Color::White, Position("d1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new King(Color::White, Position("e1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Bishop(Color::White, Position("f1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Knight(Color::White, Position("g1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Rook(Color::White, Position("h1"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("a2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("b2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("c2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("d2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("e2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("f2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("g2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::White, Position("h2"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Rook(Color::Black, Position("a8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Knight(Color::Black, Position("b8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Bishop(Color::Black, Position("c8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Queen(Color::Black, Position("d8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new King(Color::Black, Position("e8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Bishop(Color::Black, Position("f8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Knight(Color::Black, Position("g8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Rook(Color::Black, Position("h8"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("a7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("b7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("c7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("d7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("e7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("f7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("g7"), &board)));
+	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("h7"), &board)));
+	board.layoutPieces();
+}
+
 std::vector<std::vector<PieceType>> Game::getBoardState()
 {
-	//Abbreviations
-	PieceType WR = { PieceType::Rook, Color::White };
-	PieceType WN = { PieceType::Knight, Color::White };
-	PieceType WB = { PieceType::Bishop, Color::White };
-	PieceType WQ = { PieceType::Queen, Color::White };
-	PieceType WK = { PieceType::King, Color::White };
-	PieceType WP = { PieceType::Pawn, Color::White };
-	PieceType BR = { PieceType::Rook, Color::Black };
-	PieceType BN = { PieceType::Knight, Color::Black };
-	PieceType BB = { PieceType::Bishop, Color::Black };
-	PieceType BQ = { PieceType::Queen, Color::Black };
-	PieceType BK = { PieceType::King, Color::Black };
-	PieceType BP = { PieceType::Pawn, Color::Black };
-	PieceType NO = { PieceType::None };
-
-	std::vector<std::vector<PieceType>> state =
-	{ 
-		{ WR, WN, WB, WQ, WK, WB, WN, WR },
-		{ WP, WP, WP, WP, WP, WP, WP, WP },
-		{ NO, NO, NO, NO, NO, NO, NO, NO },
-		{ NO, NO, NO, NO, NO, NO, NO, NO },
-		{ NO, NO, NO, NO, NO, NO, NO, NO },
-		{ NO, NO, NO, NO, NO, NO, NO, NO },
-		{ BP, BP, BP, BP, BP, BP, BP, BP },
-		{ BR, BN, BB, BQ, BK, BB, BN, BR },
-	};
-
+	auto state = std::vector<std::vector<PieceType>>(8, std::vector<PieceType>(8));
+	for (int rank = 1; rank <= 8; rank++)
+	{
+		for (int file = 1; file <= 8; file++)
+		{
+			auto pos = Position(file, rank);
+			if (!board.hasPieceAt(pos))
+			{
+				state[rank - 1][file - 1] = { PieceType::None };
+				continue;
+			}
+			state[rank - 1][file - 1] = board.pieceAt(pos)->type();
+		}
+	}
 	return state;
 }

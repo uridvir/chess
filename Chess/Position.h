@@ -20,8 +20,8 @@ namespace Chess {
 
 	public:
 
-		int file();
-		int rank();
+		int file() const;
+		int rank() const;
 		bool exists();
 
 		explicit Position(int file = 0, int rank = 0);

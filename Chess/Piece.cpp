@@ -10,12 +10,7 @@ Piece::Piece(Color color, Position position, Board* board) {
 
 }
 
-bool Chess::Piece::isKing()
-{
-	return false;
-}
-
-bool Piece::couldReach(Position newPosition)
+bool Piece::couldAttack(Position newPosition)
 {
 	return false;
 }
@@ -41,7 +36,7 @@ bool Piece::isPinned()
 		*/
 		if (board->hasPieceAt(position)) {
 			auto piece = board->pieceAt(position);
-			return (piece->color != this->color) && piece->couldReach(board->kingOfColor(this->color)->position);
+			return (piece->color != this->color) && piece->couldAttack(board->kingOfColor(this->color)->position);
 		}
 
 	}
@@ -53,7 +48,7 @@ bool Piece::isPinned()
 bool Piece::canMove(Position newPosition)
 {
 	
-	if (!couldReach(newPosition) || Path(this->position, newPosition).obstructed(board)) {
+	if (!couldAttack(newPosition) || Path(this->position, newPosition).obstructed(board)) {
 
 		return false;
 
@@ -72,4 +67,9 @@ bool Piece::canMove(Position newPosition)
 bool Chess::Piece::movePutsInCheck(Piece* const piece, Position to)
 {
 	return false;
+}
+
+PieceType Chess::Piece::type() const
+{
+	return { PieceType::None };
 }

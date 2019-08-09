@@ -19,6 +19,12 @@
     <Filter Include="Header Files\backend">
       <UniqueIdentifier>{9e4868b3-f70e-4e9a-baf3-1dda453a58b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\backend\pieces">
+      <UniqueIdentifier>{199b8b58-619d-42bc-a458-6c33057f178f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\backend\pieces">
+      <UniqueIdentifier>{d257b21a-08ed-4553-87e2-ab4e59701e67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -45,11 +51,26 @@
     <ClInclude Include="Position.h">
       <Filter>Header Files\backend</Filter>
     </ClInclude>
-    <ClInclude Include="King.h">
-      <Filter>Header Files\backend</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="King.h">
+      <Filter>Header Files\backend\pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Header Files\backend\pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Queen.h">
+      <Filter>Header Files\backend\pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Rook.h">
+      <Filter>Header Files\backend\pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Knight.h">
+      <Filter>Header Files\backend\pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Bishop.h">
+      <Filter>Header Files\backend\pieces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +89,26 @@
     <ClCompile Include="Position.cpp">
       <Filter>Source Files\backend</Filter>
     </ClCompile>
-    <ClCompile Include="King.cpp">
-      <Filter>Source Files\backend</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="King.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Queen.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Knight.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Rook.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Bishop.cpp">
+      <Filter>Source Files\backend\pieces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

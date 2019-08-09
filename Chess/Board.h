@@ -2,6 +2,8 @@
 #include "Position.h"
 #include "Piece.h"
 #include <set>
+#include <vector>
+#include <memory>
 
 namespace Chess 
 {
@@ -10,11 +12,21 @@ namespace Chess
 
 	class Piece;
 
+	struct PieceType
+	{
+		enum Species { King, Queen, Rook, Knight, Bishop, Pawn, None };
+		Species species;
+		Color color;
+	};
+
 	class Board
 	{
 
 	private:
-		Piece* squareArray[8][8];
+		std::vector<std::vector<Piece*>> squareArray;
+		friend class Game;
+
+		std::vector<std::unique_ptr<Piece>> pieces;
 
 		std::set<Piece*> whitePieces;
 		std::set<Piece*> blackPieces;
@@ -22,8 +34,9 @@ namespace Chess
 		Piece* whiteKing;
 		Piece* blackKing;
 
+		void layoutPieces();
 	public:
-
+		Board();
 		bool hasPieceAt(Position pos);
 		Piece* pieceAt(Position pos);
 		Piece* kingOfColor(Color color);

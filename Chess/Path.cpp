@@ -23,37 +23,50 @@ bool Path::exists()
 
 Path::Path(Position from, Position to) {
 
-	if ((to.file() - from.file() == 0) ^ (to.rank() - from.rank() == 0)) {
+	const int fileChange = to.file() - from.file();
+	const int rankChange = to.rank() - from.rank();
 
-		doesExist = true;
-		pathType = Type::Horizontal;
+	doesExist = true;
 
+	if ((fileChange == 0) ^ (rankChange == 0))
+	{
+		pathType = Horizontal;
 	}
-	else if (std::abs(to.file() - from.file()) == std::abs(to.rank() - from.rank())) {
-
-		doesExist = true;
-		pathType = Type::Diagonal;
-
+	else if (std::abs(fileChange) == std::abs(rankChange))
+	{
+		pathType = Diagonal;
 	}
-	else if ((std::abs(to.file() - from.file()) == 2 && std::abs(to.rank() - from.rank()) == 1)
-		|| (std::abs(to.file() - from.file()) == 1 && std::abs(to.rank() - from.rank()) == 2)) {
-
-		doesExist = true;
-		pathType = Type::Knight;
-
+	else if (std::abs(fileChange) + std::abs(rankChange) == 3)
+	{
+		pathType = Knight;
 	}
-	else {
-
+	else 
+	{
 		doesExist = false;
-
 	}
 
-	fileIncrement = to.file() - from.file() > 0 ? 1 : (to.file() - from.file() == 0 ? 0 : -1);
-	rankIncrement = to.rank() - from.rank() > 0 ? 1 : (to.rank() - from.rank() == 0 ? 0 : -1);
+	auto signum = [](int x) -> int {
+		if (x < 0)
+		{
+			return -1;
+		}
+		else if (x == 0)
+		{
+			return 0;
+		}
+		return 1;
+	};
 
 	startPos = from;
 	endPos = to;
 
+	if (pathType == Knight)
+	{
+		return;
+	}
+
+	fileIncrement = signum(fileChange);
+	rankIncrement = signum(rankChange);
 }
 
 bool Path::obstructed(Board* board) {
@@ -86,60 +99,43 @@ bool Path::obstructed(Board* board) {
 
 bool Path::goesThrough(Position pos)
 {
-
 	if (pathType == Type::Knight) {
-
 		return false;
-
 	}
 
 	int file = startPos.file() + fileIncrement;
 	int rank = startPos.rank() + rankIncrement;
 
-	while (file != endPos.file() && rank != endPos.rank()) {
-
-		if (file == pos.file() && rank == pos.rank()) {
-
+	while (file != endPos.file() && rank != endPos.rank())
+	{
+		if (file == pos.file() && rank == pos.rank())
+		{
 			return true;
-
 		}
 
 		file += fileIncrement;
 		rank += rankIncrement;
-
 	}
-
 	return false;
-
 }
 
 std::vector<Position> Path::liesBeyond()
 {
-	
 	if (pathType == Type::Knight) {
-
 		return {};
-
 	}
 
 	auto positions = std::vector<Position>();
-
 	int file = endPos.file() + fileIncrement;
 	int rank = endPos.rank() + rankIncrement;
-
 	Position pos(file, rank);
 	
 	while (pos.exists()) {
-
 		positions.push_back(pos);
-
 		file += fileIncrement;
 		rank += rankIncrement;
-
 		pos = Position(file, rank);
-
 	}
 
 	return positions;
-
 }

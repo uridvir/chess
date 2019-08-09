@@ -4,6 +4,7 @@
 
 namespace Chess {
 
+	struct PieceType;
 	class Board;
 	enum Color;
 
@@ -19,13 +20,12 @@ namespace Chess {
 		Position position;
 
 		Piece(Chess::Color color, Position position, Board* board);
-		virtual bool couldReach(Position newPosition);
+		virtual bool couldAttack(Position newPosition);
 		virtual bool canMove(Position to);
 		bool isPinned();
 
-		virtual bool isKing();
 		virtual bool movePutsInCheck(Piece* const piece, Position to);
 
+		virtual PieceType type() const;
 	};
-
 }
