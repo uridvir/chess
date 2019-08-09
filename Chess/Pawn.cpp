@@ -25,7 +25,7 @@ bool Chess::Pawn::canMove(Position newPosition)
 	{
 		return false;
 	}
-	if (couldAttack(newPosition))
+	if (couldAttack(newPosition) && board->hasPieceAt(newPosition) && board->pieceAt(newPosition)->color != this->color)
 	{
 		return true;
 	}

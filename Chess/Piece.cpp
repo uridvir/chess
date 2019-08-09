@@ -47,17 +47,18 @@ bool Piece::isPinned()
 
 bool Piece::canMove(Position newPosition)
 {
-	
+	//If the piece can't reach
 	if (!couldAttack(newPosition) || Path(this->position, newPosition).obstructed(board)) {
-
 		return false;
-
 	}
 
 	if (board->kingOfColor(this->color)->movePutsInCheck(this, newPosition)) {
-
 		return false;
+	}
 
+	if (board->hasPieceAt(newPosition) && board->pieceAt(newPosition)->color == this->color)
+	{
+		return false;
 	}
 
 	return true;

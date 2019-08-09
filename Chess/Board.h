@@ -35,6 +35,7 @@ namespace Chess
 		Piece* blackKing;
 
 		void layoutPieces();
+		void removePiece(Piece& piece);
 	public:
 		Board();
 		bool hasPieceAt(Position pos);

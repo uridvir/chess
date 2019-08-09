@@ -80,7 +80,7 @@ bool Path::obstructed(Board* board) {
 	int file = startPos.file() + fileIncrement;
 	int rank = startPos.rank() + rankIncrement;
 
-	while (file != endPos.file() && rank != endPos.rank()) {
+	while (file != endPos.file() || rank != endPos.rank()) {
 
 		if (board->hasPieceAt(Position(file, rank))) {
 

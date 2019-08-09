@@ -15,7 +15,6 @@ namespace Chess {
 		Board* board;
 
 	public:
-
 		Color color;
 		Position position;
 
@@ -23,9 +22,7 @@ namespace Chess {
 		virtual bool couldAttack(Position newPosition);
 		virtual bool canMove(Position to);
 		bool isPinned();
-
 		virtual bool movePutsInCheck(Piece* const piece, Position to);
-
 		virtual PieceType type() const;
 	};
 }

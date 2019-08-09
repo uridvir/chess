@@ -12,10 +12,12 @@ namespace Chess
 
 	private:
 		Board board;
+		Color whoseTurn;
 
 	public:
 		Game();
 		std::vector<std::vector<PieceType>> getBoardState();
+		void makeMove(Position from, Position to);
 	
 	};
 

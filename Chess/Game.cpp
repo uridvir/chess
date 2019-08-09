@@ -42,6 +42,7 @@ Chess::Game::Game()
 	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("g7"), &board)));
 	board.pieces.emplace_back(std::unique_ptr<Piece>(new Pawn(Color::Black, Position("h7"), &board)));
 	board.layoutPieces();
+	whoseTurn = Color::White;
 }
 
 std::vector<std::vector<PieceType>> Game::getBoardState()
@@ -61,4 +62,26 @@ std::vector<std::vector<PieceType>> Game::getBoardState()
 		}
 	}
 	return state;
+}
+
+void Chess::Game::makeMove(Position from, Position to)
+{
+	auto movingPiece = board.pieceAt(from);
+	if (movingPiece == nullptr || movingPiece->color != whoseTurn)
+	{
+		return;
+	}
+	if (!movingPiece->canMove(to))
+	{
+		return;
+	}
+	if (board.hasPieceAt(to))
+	{
+		auto& piece = *board.pieceAt(to);
+		board.removePiece(piece);
+	}
+	board.squareArray[to.rank() - 1][to.file() - 1] = movingPiece;
+	board.squareArray[from.rank() - 1][from.file() - 1] = nullptr;
+	movingPiece->position = to;
+	whoseTurn = whoseTurn == Color::White ? Color::Black : Color::White;
 }

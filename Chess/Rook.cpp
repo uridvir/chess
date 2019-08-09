@@ -5,7 +5,7 @@ using namespace Chess;
 bool Chess::Rook::couldAttack(Position newPosition)
 {
 	auto path = Path(this->position, newPosition);
-	return path.exists() && path.type() == Path::Horizontal;
+	return path.exists() && path.type() == Path::Horizontal && !path.obstructed(board);
 }
 
 PieceType Chess::Rook::type() const

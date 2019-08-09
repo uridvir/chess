@@ -26,7 +26,9 @@ namespace Chess {
 
 		explicit Position(int file = 0, int rank = 0);
 		explicit Position(std::string pos);
-
 	};
+
+	bool operator==(const Position& lhs, const Position& rhs);
+	bool operator!=(const Position& lhs, const Position& rhs);
 
 }

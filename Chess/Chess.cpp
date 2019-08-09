@@ -15,6 +15,7 @@ HWND mainWindow;								// Main window
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 Chess::Game game;								// Chess game state
+Chess::Position originPos;						// Square where drag started
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -175,14 +176,60 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             EndPaint(hWnd, &ps);
         }
         break;
-	case WM_LBUTTONUP:
+	case WM_LBUTTONDOWN:
 		{
+			//Debugging
+			//OutputDebugStringA("Button down!\n");
+			
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 
-			char debug[100];
-			sprintf_s(debug, 100, "Clicked cell with row %d and column %d\n", yPos / 50, xPos / 50);
-			OutputDebugStringA(debug);
+			int file = xPos / 50 + 1;
+			int rank = 8 - (yPos / 50);
+
+			auto pos = Chess::Position(file, rank);
+
+			if (pos.exists())
+			{
+				//Debugging
+				/*
+				char debug[100];
+				sprintf_s(debug, 100, "Origin file %d and rank %d\n", file, rank);
+				OutputDebugStringA(debug);
+				*/
+
+				originPos = pos;
+			}
+		}
+		break;
+	case WM_LBUTTONUP:
+		{
+			//Debugging
+			//OutputDebugStringA("Button up!\n");
+
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+
+			int file = xPos / 50 + 1;
+			int rank = 8 - (yPos / 50);
+
+			auto pos = Chess::Position(file, rank);
+			
+			if (pos.exists())
+			{
+				//Debugging
+				/*
+				char debug[100];
+				sprintf_s(debug, 100, "Destination file %d and rank %d\n", file, rank);
+				OutputDebugStringA(debug);
+				*/
+
+				auto destinationPos = pos;
+				game.makeMove(originPos, destinationPos);
+				InvalidateRect(hWnd, NULL, TRUE);
+				UpdateWindow(hWnd);
+			}
+			originPos = Chess::Position();
 		}
 		break;
     case WM_DESTROY:

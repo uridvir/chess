@@ -13,7 +13,7 @@ int Position::rank() const
 
 bool Position::exists()
 {
-	return false;
+	return doesExist;
 }
 
 Position::Position(int file, int rank) {
@@ -62,4 +62,14 @@ Position::Position(std::string pos) {
 	}
 
 	doesExist = true;
+}
+
+bool Chess::operator==(const Position& lhs, const Position& rhs)
+{
+	return lhs.file() == rhs.file() && lhs.rank() == rhs.rank();
+}
+
+bool Chess::operator!=(const Position& lhs, const Position& rhs)
+{
+	return !(lhs == rhs);
 }
