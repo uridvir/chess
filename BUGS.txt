@@ -1,0 +1,2 @@
+#1: A pinned piece cannot capture the piece pinning it.
+#2: En passant does not work.
