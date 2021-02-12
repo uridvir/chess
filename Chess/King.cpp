@@ -27,20 +27,6 @@ bool King::canMove(Position newPosition)
 		return false;
 	}
 
-	//Check that the new position is safe
-	/*
-	for (auto threat : board->allPiecesOfColor(this->color == Color::White ? Color::Black : Color::White))
-	{
-		auto path = Path(threat->position, newPosition);
-		
-		Piece* obstructor = nullptr;
-		bool obstructed = path.obstructed(board, obstructor) && obstructor != this;
-		if (path.exists() && threat->couldAttack(newPosition) && !obstructed) 
-		{
-			return false;
-		}
-	}
-	*/
 	return !this->movePutsInCheck(this, newPosition);
 }
 
@@ -84,12 +70,7 @@ bool King::movePutsInCheck(Piece *const piece, Position newPosition)
 	for (auto threat : board->allPiecesOfColor(this->color == Color::White ? Color::Black : Color::White)) {
 
 		auto path = Path(threat->position, kingPos);
-		/*
-		Piece* obstructor = nullptr;
-		bool obstructed = path.obstructed(board, obstructor) && obstructor != this;
-		*/
-
-		if (path.exists() && threat->couldAttack(kingPos) /* && !obstructed */ && !path.obstructed(board) && !path.goesThrough(newPosition)
+		if (path.exists() && threat->couldAttack(kingPos) && !path.obstructed(board) && !path.goesThrough(newPosition)
 			&& newPosition != threat->position)
 		{
 			return true;
