@@ -1,2 +1,4 @@
 #1: A pinned piece cannot capture the piece pinning it.
 #2: En passant does not work.
+#3: Castling does not work.
+#4: No checkmate detection (the checkmated player can't make any moves, but no message appears declaring checkmate).
