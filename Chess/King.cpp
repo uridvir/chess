@@ -28,31 +28,68 @@ bool King::canMove(Position newPosition)
 	}
 
 	//Check that the new position is safe
+	/*
 	for (auto threat : board->allPiecesOfColor(this->color == Color::White ? Color::Black : Color::White))
 	{
 		auto path = Path(threat->position, newPosition);
 		
-		if (path.exists() && threat->couldAttack(newPosition) && !path.obstructed(board)) 
+		Piece* obstructor = nullptr;
+		bool obstructed = path.obstructed(board, obstructor) && obstructor != this;
+		if (path.exists() && threat->couldAttack(newPosition) && !obstructed) 
 		{
 			return false;
 		}
 	}
+	*/
+	return !this->movePutsInCheck(this, newPosition);
+}
 
-	return true;
+Piece* Chess::King::getCastlingRook(Position moveTo)
+{
+	if (this->movesMade != 0 || moveTo.file() != 3 && moveTo.file() != 7) {
+		return nullptr;
+	}
+	Piece* rook = board->pieceAt(Position(moveTo.file() < this->position.file() ? 1 : 8, this->position.rank()));
+	if (!rook || rook->movesMade != 0 || Path(this->position, rook->position).obstructed(board)) {
+		return nullptr;
+	}
+
+	auto signum = [](int x) -> int {
+		if (x < 0) return -1;
+		else if (x == 0) return 0;
+		return 1;
+	};
+
+	int inc = signum(moveTo.file() - this->position.file());
+	for (int file = this->position.file(); file - inc != moveTo.file(); file += inc) {
+		if (this->movePutsInCheck(this, Position(file, this->position.rank()))) {
+			return nullptr;
+		}
+	}
+	return rook;
 }
 
 bool King::movePutsInCheck(Piece *const piece, Position newPosition)
 {
-	if (piece->isPinned()) {
+	Piece *const pinner = piece->getPinner();
+
+	if (pinner != nullptr && pinner->position != newPosition) {
+
 		return true;
+
 	}
 
 	//TODO: Implement a "checked" state so that this check only happens when king has been checked
+	Position kingPos = piece == this ? newPosition : this->position;
 	for (auto threat : board->allPiecesOfColor(this->color == Color::White ? Color::Black : Color::White)) {
 
-		auto path = Path(threat->position, this->position);
+		auto path = Path(threat->position, kingPos);
+		/*
+		Piece* obstructor = nullptr;
+		bool obstructed = path.obstructed(board, obstructor) && obstructor != this;
+		*/
 
-		if (path.exists() && threat->couldAttack(this->position) && !path.obstructed(board) && !path.goesThrough(newPosition)
+		if (path.exists() && threat->couldAttack(kingPos) /* && !obstructed */ && !path.obstructed(board) && !path.goesThrough(newPosition)
 			&& newPosition != threat->position)
 		{
 			return true;

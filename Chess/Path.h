@@ -30,7 +30,7 @@ namespace Chess {
 		bool exists();
 
 		Path(Position from, Position to);
-		bool obstructed(Board* board);
+		bool obstructed(Board* board, Piece* obstructor = nullptr);
 		bool goesThrough(Position pos);
 		std::vector<Position> liesBeyond();
 

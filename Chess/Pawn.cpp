@@ -55,6 +55,18 @@ bool Chess::Pawn::canMove(Position newPosition)
 	}
 }
 
+Piece* Chess::Pawn::getEnPassantVictim(Position moveTo)
+{
+	Piece* victim = board->pieceAt(Position(moveTo.file(), this->position.rank()));
+	if (!victim || !couldAttack(moveTo) || victim->color == this->color) {
+		return nullptr;
+	}
+	if (victim->movesMade == 1 && victim->position.rank() == (victim->color == Color::White ? 4 : 5)) {
+		return victim;
+	}
+	return nullptr;
+}
+
 PieceType Chess::Pawn::type() const
 {
 	return { PieceType::Pawn, this->color };

@@ -15,33 +15,28 @@ bool Piece::couldAttack(Position newPosition)
 	return false;
 }
 
-bool Piece::isPinned()
+Piece* Piece::getPinner()
 {
 
 	auto path = Path(board->kingOfColor(this->color)->position, this->position);
 
 	if (!path.exists() || path.obstructed(board)) {
-
-		return false;
-
+		return nullptr;
 	}
 
 	auto positions = path.liesBeyond();
-
 	for (auto position : positions) {
-
 		/*
 		Consider the first piece encountered as we move beyond the "pinned" piece. If it could threaten the king, there is a pin.
 		Otherwise there is no pin because the piece is in the way.
 		*/
 		if (board->hasPieceAt(position)) {
 			auto piece = board->pieceAt(position);
-			return (piece->color != this->color) && piece->couldAttack(board->kingOfColor(this->color)->position);
+			return (piece->color != this->color) && piece->couldAttack(board->kingOfColor(this->color)->position) ? piece : nullptr;
 		}
-
 	}
 
-	return false;
+	return nullptr;
 
 }
 
@@ -63,6 +58,16 @@ bool Piece::canMove(Position newPosition)
 
 	return true;
 
+}
+
+Piece* Chess::Piece::getEnPassantVictim(Position moveTo)
+{
+	return nullptr;
+}
+
+Piece* Chess::Piece::getCastlingRook(Position moveTo)
+{
+	return nullptr;
 }
 
 bool Chess::Piece::movePutsInCheck(Piece* const piece, Position to)

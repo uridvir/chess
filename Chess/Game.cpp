@@ -73,15 +73,42 @@ void Chess::Game::makeMove(Position from, Position to)
 	}
 	if (!movingPiece->canMove(to))
 	{
-		return;
+		Piece* partner = nullptr;
+		switch (movingPiece->type().species) {
+		case PieceType::Species::Pawn:
+			partner = movingPiece->getEnPassantVictim(to);
+			if (partner != nullptr) {
+				Position victimPos = partner->position;
+				board.removePiece(*partner);
+				board.squareArray[victimPos.rank() - 1][victimPos.file() - 1] = nullptr;
+			}
+			else {
+				return;
+			}
+			break;
+		case PieceType::Species::King:
+			partner = movingPiece->getCastlingRook(to);
+			if (partner != nullptr) {
+				board.squareArray[partner->position.rank() - 1][partner->position.file() - 1] = nullptr;
+				partner->position = Position(to.file() < from.file() ? 4 : 6, partner->position.rank());
+				board.squareArray[partner->position.rank() - 1][partner->position.file() - 1] = partner;
+				partner->movesMade++;
+			}
+			else {
+				return;
+			}
+			break;
+		default:
+			return;
+		}
 	}
 	if (board.hasPieceAt(to))
 	{
-		auto& piece = *board.pieceAt(to);
-		board.removePiece(piece);
+		board.removePiece(*board.pieceAt(to));
 	}
 	board.squareArray[to.rank() - 1][to.file() - 1] = movingPiece;
 	board.squareArray[from.rank() - 1][from.file() - 1] = nullptr;
 	movingPiece->position = to;
+	movingPiece->movesMade++;
 	whoseTurn = whoseTurn == Color::White ? Color::Black : Color::White;
 }

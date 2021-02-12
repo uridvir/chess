@@ -34,6 +34,9 @@ Path::Path(Position from, Position to) {
 	}
 	else if (std::abs(fileChange) == std::abs(rankChange))
 	{
+		if (fileChange == 0) {
+			doesExist = false;
+		}
 		pathType = Diagonal;
 	}
 	else if (std::abs(fileChange) + std::abs(rankChange) == 3)
@@ -69,9 +72,9 @@ Path::Path(Position from, Position to) {
 	rankIncrement = signum(rankChange);
 }
 
-bool Path::obstructed(Board* board) {
+bool Path::obstructed(Board* board, Piece* obstructor) {
 
-	if (pathType == Type::Knight) {
+	if (pathType == Type::Knight || !doesExist) {
 
 		return false;
 
@@ -84,6 +87,14 @@ bool Path::obstructed(Board* board) {
 
 		if (board->hasPieceAt(Position(file, rank))) {
 
+			obstructor = board->pieceAt(Position(file, rank));
+
+			if (board->hasPieceAt(startPos)) {
+				Color oppColor = board->pieceAt(startPos)->color == Color::White ? Color::Black : Color::White;
+				if (obstructor == board->kingOfColor(oppColor)) {
+					return false;
+				}
+			}
 			return true;
 
 		}
@@ -93,13 +104,14 @@ bool Path::obstructed(Board* board) {
 
 	}
 
+	obstructor = nullptr;
 	return false;
 
 }
 
 bool Path::goesThrough(Position pos)
 {
-	if (pathType == Type::Knight) {
+	if (pathType == Type::Knight || !doesExist) {
 		return false;
 	}
 
@@ -121,7 +133,7 @@ bool Path::goesThrough(Position pos)
 
 std::vector<Position> Path::liesBeyond()
 {
-	if (pathType == Type::Knight) {
+	if (pathType == Type::Knight || !doesExist) {
 		return {};
 	}
 
