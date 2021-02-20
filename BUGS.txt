@@ -5,3 +5,4 @@ FIXED #3: Castling does not work.
 FIXED #5: The king can escape check if it moves opposite the attacking piece (so that the attacking piece's path to the
 new position is blocked by the king's old position)
 FIXED #6: En passant can be performed after a delay (en passant should only be possible directly after the victim pawn moves).
+#7: Pawn promotion not implemented yet.

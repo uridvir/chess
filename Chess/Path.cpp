@@ -118,7 +118,7 @@ bool Path::goesThrough(Position pos)
 	int file = startPos.file() + fileIncrement;
 	int rank = startPos.rank() + rankIncrement;
 
-	while (file != endPos.file() && rank != endPos.rank())
+	while (file != endPos.file() || rank != endPos.rank())
 	{
 		if (file == pos.file() && rank == pos.rank())
 		{
