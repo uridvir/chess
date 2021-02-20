@@ -61,7 +61,8 @@ Piece* Chess::Pawn::getEnPassantVictim(Position moveTo)
 	if (!victim || !couldAttack(moveTo) || victim->color == this->color) {
 		return nullptr;
 	}
-	if (victim->movesMade == 1 && victim->position.rank() == (victim->color == Color::White ? 4 : 5)) {
+	if (victim->movesMade == 1 && board->justMoved == victim
+		&& victim->position.rank() == (victim->color == Color::White ? 4 : 5)) {
 		return victim;
 	}
 	return nullptr;

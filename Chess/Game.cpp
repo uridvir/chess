@@ -110,5 +110,6 @@ void Chess::Game::makeMove(Position from, Position to)
 	board.squareArray[from.rank() - 1][from.file() - 1] = nullptr;
 	movingPiece->position = to;
 	movingPiece->movesMade++;
+	board.justMoved = movingPiece;
 	whoseTurn = whoseTurn == Color::White ? Color::Black : Color::White;
 }

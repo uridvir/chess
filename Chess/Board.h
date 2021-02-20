@@ -42,6 +42,7 @@ namespace Chess
 		Piece* pieceAt(Position pos);
 		Piece* kingOfColor(Color color);
 		std::set<Piece*> allPiecesOfColor(Color color);
+		Piece* justMoved;
 	};
 
 }
